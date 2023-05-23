@@ -274,14 +274,14 @@ def cerber(batch_size,n):
 # dense layers bridge
 
     # input dense block - preparation
-    d11=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(x)
-    d21=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(y)
-    d31=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(z)
+    d11=tf.keras.layers.Dense(n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(x)
+    d21=tf.keras.layers.Dense(n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(y)
+    d31=tf.keras.layers.Dense(n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(z)
 
     # processing dense block
-    d12=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d11)
-    d22=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d21)
-    d32=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d31)
+    d12=tf.keras.layers.Dense(n*n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d11)
+    d22=tf.keras.layers.Dense(n*n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d21)
+    d32=tf.keras.layers.Dense(n*n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(d31)
 
     # interconnections now
     ic13=tf.keras.layers.Add()([d12,d22])
@@ -289,14 +289,14 @@ def cerber(batch_size,n):
     ic11=tf.keras.layers.Add()([d32,d22])
 
     # and now mixing
-    m11=tf.keras.layers.Add()([ic11,d12])
-    m12=tf.keras.layers.Add()([ic12,d22])
-    m13=tf.keras.layers.Add()([ic13,d32])
+    m11=tf.keras.layers.Concatenate()([ic11,d12])
+    m12=tf.keras.layers.Concatenate()([ic12,d22])
+    m13=tf.keras.layers.Concatenate()([ic13,d32])
 
     # dense continuation
-    d13=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m11)
-    d23=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m12)
-    d33=tf.keras.layers.Conv2D(n*n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m13)
+    d13=tf.keras.layers.Dense(n*n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m11)
+    d23=tf.keras.layers.Dense(n*n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m12)
+    d33=tf.keras.layers.Dense(n*n,activation="relu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m13)
 
     # interconnections now
     ic23=tf.keras.layers.Add()([d13,d23])
@@ -304,14 +304,14 @@ def cerber(batch_size,n):
     ic21=tf.keras.layers.Add()([d33,d23])
 
     # and now mixing
-    m21=tf.keras.layers.Add()([ic21,d13])
-    m22=tf.keras.layers.Add()([ic22,d23])
-    m23=tf.keras.layers.Add()([ic23,d33])
+    m21=tf.keras.layers.Concatenate()([ic21,d13])
+    m22=tf.keras.layers.Concatenate()([ic22,d23])
+    m23=tf.keras.layers.Concatenate()([ic23,d33])
 
     # dense block 2 with interconnections
-    d14=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m21)
-    d24=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m22)
-    d34=tf.keras.layers.Conv2D(n,(1,1),(1,1),activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m23)
+    d14=tf.keras.layers.Dense(n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m21)
+    d24=tf.keras.layers.Dense(n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m22)
+    d34=tf.keras.layers.Dense(n,activation="elu",kernel_initializer=tf.keras.initializers.HeNormal(seed=seed+321))(m23)
 
     # interconnections now
     ic33=tf.keras.layers.Add()([d14,d24])
@@ -319,11 +319,11 @@ def cerber(batch_size,n):
     ic31=tf.keras.layers.Add()([d34,d24])
 
     # and now mixing
-    m31=tf.keras.layers.Add()([ic31,d14])
-    m32=tf.keras.layers.Add()([ic32,d24])
-    m33=tf.keras.layers.Add()([ic33,d34])
+    m31=tf.keras.layers.Concatenate()([ic31,d14])
+    m32=tf.keras.layers.Concatenate()([ic32,d24])
+    m33=tf.keras.layers.Concatenate()([ic33,d34])
 
-    x=tf.keras.layers.Add()([m31,m32,m33])
+    x=tf.keras.layers.Concatenate()([m31,m32,m33])
 
 # dense layers bridge end
 # dense block 3
@@ -393,7 +393,7 @@ def cerber(batch_size,n):
 
     return tf.keras.Model(inputs,outputs)
 
-model = cerber(1,4) # fine for 16 GB RAM
+model = cerber(1,4)
 model.summary()
 plot_model(model, to_file=r"C:/Users/User/Desktop/spider_nn/fitterer/pc trained/cerber_CPU_conv.png", show_shapes=True, show_layer_names=True)
 opti=tf.keras.optimizers.AdamW(0.001,0.001)
