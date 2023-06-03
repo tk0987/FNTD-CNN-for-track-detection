@@ -12,6 +12,7 @@ For now, with such generated training dataset, it acts like filter for inhomogen
 Worse part now...
 
 1.	Introduction
+
 This convolutional neural network is called by me „Cerber” because of its architecture – input data feeds three partially independent (but interconnected) computational blocks, which at some point merge into common core.
 
 Main purpose of this network was semantic segmentation of microscopic images for nuclear particle tracks detection. However, only training dataset limits its possible uses.
